@@ -22,8 +22,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.danielboechat.echoapp",
-      "usesCleartextTraffic": true
+      "package": "com.danielboechat.echoapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
