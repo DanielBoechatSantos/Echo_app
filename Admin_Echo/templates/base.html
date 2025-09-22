@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gerenciador de Cifras - Echo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .modal-overlay {
+            display: none; position: fixed; z-index: 1000;
+            left: 0; top: 0; width: 100%; height: 100%;
+            overflow: auto; background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: #fefefe; margin: 10% auto; padding: 20px;
+            border: 1px solid #888; width: 80%; max-width: 500px;
+            border-radius: 8px; position: relative;
+        }
+        .close-button {
+            color: #aaa; float: right; font-size: 28px; font-weight: bold;
+            position: absolute; top: 10px; right: 20px;
+        }
+        .close-button:hover, .close-button:focus {
+            color: black; text-decoration: none; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('listar_cifras') }}">Echo Admin</a>
+            <div class="d-flex">
+                <!--
+                    ==============================================================
+                    == ÁREA DE ESTILIZAÇÃO DOS BOTÕES ==
+                    ==============================================================
+                    Para mudar a cor de um botão, altere a classe 'btn-*'.
+                    
+                    Opções de cores disponíveis:
+                    - btn-primary:     Azul (padrão)
+                    - btn-secondary:   Cinza
+                    - btn-success:     Verde
+                    - btn-danger:      Vermelho
+                    - btn-warning:     Amarelo
+                    - btn-info:        Azul claro
+                    - btn-light:       Branco
+                    - btn-dark:        Cinza escuro
+
+                    Você também pode usar o estilo "outline" (apenas borda),
+                    adicionando "outline" após "btn-". Ex: 'btn-outline-success'.
+                -->
+
+                <!-- Botão Home: Atualmente cinza (btn-secondary) -->
+                <a href="{{ url_for('listar_cifras') }}" class="btn btn-success me-2">Home</a>
+                
+                <!-- Botão Usuários Conectados: Atualmente azul claro (btn-info) -->
+                <a href="{{ url_for('usuarios_conectados') }}" class="btn btn-info me-2">Usuários Conectados</a>
+                
+                <!-- Botão Gerenciar Usuários: Atualmente com borda branca (btn-outline-light) -->
+                <a href="{{ url_for('gerenciar_usuarios') }}" class="btn btn-danger me-2">Gerenciar Usuários</a>
+                
+                <!-- Botão Cadastrar Música: Atualmente azul (btn-primary) -->
+                <a href="{{ url_for('criar_cifra') }}" class="btn btn-primary">Cadastrar Música</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Adiciona um espaçamento no topo do container para compensar a navbar fixa -->
+    <div class="container mt-4" style="padding-top: 56px;">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

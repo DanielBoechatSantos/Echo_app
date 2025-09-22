@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Novo container para o layout da página -->
+<div class="page-container">
+
+    <!-- CABEÇALHO DA PÁGINA: Título e busca, que não rolam. -->
+    <div class="page-header">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h1>Lista de letras e cifras disponíveis</h1>
+            </div>
+            <form method="GET" action="{{ url_for('listar_cifras') }}" class="mb-1">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="Buscar por título, banda ou tom..." value="{{ q }}">
+                    <button class="btn btn-outline-secondary" type="submit">Buscar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- CONTEÚDO DA PÁGINA: Apenas esta área terá rolagem. -->
+    <div class="page-content">
+        <div class="container">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Título</th>
+                        <th scope="col">Banda</th>
+                        <th scope="col">Tom</th>
+                        <th scope="col" class="text-end">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for musica in musicas %}
+                    <tr class="table-row-{{ loop.cycle('light', 'secondary-subtle') }}">
+                        <td>{{ musica.titulo }}</td>
+                        <td>{{ musica.banda }}</td>
+                        <td>{{ musica.tom }}</td>
+                        <td class="text-end">
+                            <a href="{{ url_for('detalhar_cifra', cifra_id=musica.id) }}" class="btn btn-info btn-sm">Ver</a>
+                            <a href="{{ url_for('editar_cifra', cifra_id=musica.id) }}" class="btn btn-warning btn-sm">Editar</a>
+                            <form action="{{ url_for('excluir_cifra', cifra_id=musica.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja excluir esta cifra?');">
+                                <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center">Nenhuma cifra encontrada.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<!-- RODAPÉ FIXO -->
+<footer class="fixed-footer bg-dark text-white p-2">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <span><strong>Aplicação:</strong> Interface Echo</span> |
+                <span><strong>Desenvolvido por:</strong> Daniel Boechat</span>
+            </div>
+            <div id="datetime" class="text-end">
+                <span id="date"></span> | <span id="clock"></span>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<style>
+    /* Removemos o padding do container principal do base.html para controlar o layout aqui */
+    .container.mt-4 {
+        padding: 0;
+        margin: 0;
+        max-width: 100%;
+        height: calc(100vh - 56px); /* Altura da janela menos a navbar */
+    }
+
+    /* Estrutura da página com Flexbox */
+    .page-container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .page-header {
+        flex-shrink: 0; /* Impede que o cabeçalho encolha */
+        padding: 1rem 0;
+        border-bottom: 1px solid #dee2e6;
+        background-color: #f8f9fa;
+    }
+
+    .page-content {
+        flex-grow: 1; /* Faz esta área ocupar todo o espaço restante */
+        overflow-y: auto; /* Adiciona a rolagem apenas aqui */
+    }
+    
+    /* Faz o cabeçalho da tabela "grudar" no topo da área de rolagem */
+    .table > thead {
+        position: sticky;
+        top: -1px;
+        z-index: 10;
+    }
+
+    .fixed-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1020;
+    }
+</style>
+
+<script>
+    // Script do relógio (sem alterações)
+    function updateDateTime() {
+        const now = new Date();
+        const dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+        document.getElementById('date').textContent = now.toLocaleDateString('pt-BR', dateOptions);
+        document.getElementById('clock').textContent = now.toLocaleTimeString('pt-BR', timeOptions);
+    }
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+</script>
+{% endblock %}
+
